@@ -1,9 +1,9 @@
 // Node App starts here
 
-const mongoose = require('mongoose');
-const app = require('./app');
-const config = require('./config/config');
-const logger = require('./config/logger');
+const mongoose = require("mongoose");
+const app = require("./app");
+const config = require("./config/config");
+const logger = require("./config/logger");
 
 let server;
 logger.info(`Node Environment => ${config.env}`);
@@ -20,7 +20,7 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then((db) => {
 const exitHandler = () => {
   if (server) {
     server.close(() => {
-      logger.info('Server closed');
+      logger.info("Server closed");
       process.exit(1);
     });
   } else {
@@ -34,13 +34,13 @@ const unexpectedErrorHandler = (error) => {
 };
 
 // Listen to unhandled exceptions and call handler when such exceptions occur
-process.on('uncaughtException', unexpectedErrorHandler);
-process.on('unhandledRejection', unexpectedErrorHandler);
+process.on("uncaughtException", unexpectedErrorHandler);
+process.on("unhandledRejection", unexpectedErrorHandler);
 
-// Close the server if command received to close the server. 
+// Close the server if command received to close the server.
 // E.g. Node process killed by OS or by the user using kill, pkill, task manager, etc.
-process.on('SIGTERM', () => {
-  logger.info('SIGTERM received');
+process.on("SIGTERM", () => {
+  logger.info("SIGTERM received");
   if (server) {
     server.close();
   }

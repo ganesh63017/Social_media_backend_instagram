@@ -11,8 +11,6 @@ const uploadPost = catchAsync(async (req, res) => {
   const { caption, like, location } = req.body;
   const { _id } = req.user;
 
-  console.log(req.files);
-
   const imageUrlList = req.files.map((each) => each.filename);
   if (imageUrlList.length > 0) {
     const newPhotoUpload = new postSchema({
@@ -49,7 +47,6 @@ const getPosts = catchAsync(async (req, res) => {
 const savePost = catchAsync(async (req, res) => {
   const { postId } = req.params;
   const { _id } = req.user;
-  console.log(postId);
   try {
     const feeds = await postSchema
       .findOne({ _id: postId })
@@ -59,7 +56,6 @@ const savePost = catchAsync(async (req, res) => {
       saved_by: _id,
       savedPost: feeds,
     });
-    console.log(feeds);
     await savepost.save();
     res.status(200).json({ message: "saved successfully" });
   } catch (e) {
@@ -72,10 +68,8 @@ const savePost = catchAsync(async (req, res) => {
 const deleteSavePost = catchAsync(async (req, res) => {
   const { postId } = req.params;
   const { _id } = req.user;
-  console.log(postId);
   try {
     const data = await savedSchema.findOneAndDelete({ post_id: postId });
-    console.log(data);
     res.status(200).json({ message: "Removed Successfully" });
   } catch (e) {
     res.status(400).json({
@@ -198,7 +192,6 @@ const addLikesToComment = catchAsync(async (req, res) => {
 
   try {
     const comment = await commentSchema.findById(commentId);
-    console.log(comment);
 
     const likedPost = comment.likes.filter(
       (like) => JSON.stringify(like) === JSON.stringify(_id)

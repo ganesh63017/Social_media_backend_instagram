@@ -6,7 +6,6 @@ const validate = require("../middlewares/validate");
 const router = express.Router();
 
 const uploadVideo = require("../middlewares/video.middleware");
-console.log(validateVideo)
 
 // Token authentication for all routes defined in this file
 router.use(auth());

@@ -101,7 +101,6 @@ If you did not create an account, then ignore this email.`;
   // console.log(text);
 
   await sendEmail(to, subject, text);
-  
 };
 
 module.exports = {

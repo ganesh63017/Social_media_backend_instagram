@@ -24,8 +24,6 @@ async function uploadToCloudinary(locaFilePath) {
   // path of image we want when it is uploded to cloudinary
   var filePathOnCloudinary = mainFolderName + "/" + locaFilePath;
 
-
-
   return cloud.uploader
 
     .upload(locaFilePath, { resource_type: "video" })
@@ -52,29 +50,24 @@ const uploadVideo = catchAsync(async (req, res, next) => {
 
   try {
     var locaFilePath = req.file;
-    
+
     var result = await uploadToCloudinary(locaFilePath.path);
-    console.log(result)
-    if(result.url){
+    if (result.url) {
       const newVideo = new videoSchema({
         created_by: _id,
         url: result.url,
         likes: [],
         title: req.body.title,
         comments: [],
-        disLikes:[]
+        disLikes: [],
       });
       await newVideo.save();
       return res.status(200).json({
         message: `Video is Successfully Uploaded`,
       });
-
+    } else {
+      throw new Error("serever Error");
     }
-    else{
-      throw new Error("serever Error")
-    }
-    
-    
   } catch (error) {
     return res.status(400).json({ message: error.message });
   }
@@ -82,8 +75,10 @@ const uploadVideo = catchAsync(async (req, res, next) => {
 
 const getVideos = catchAsync(async (req, res) => {
   try {
-    const data = await videoSchema.find() .sort({ _id: -1 })
-    .populate("created_by", "lastName firstName profile_pic");
+    const data = await videoSchema
+      .find()
+      .sort({ _id: -1 })
+      .populate("created_by", "lastName firstName profile_pic");
     res.status(200).json({
       data,
     });
