@@ -14,6 +14,10 @@ const ApiError = require("./utils/ApiError");
 const path = require("path");
 
 const app = express();
+const allowedDomains = [
+  "http://localhost:3000",
+  "https://maze-skinny-mile.glitch.me",
+];
 
 if (config.env !== "test") {
   app.use(morgan.successHandler);
@@ -42,7 +46,17 @@ app.use(express.urlencoded({ extended: true }));
 app.use(compression());
 
 // Enable cors to accept requests from any frontend domain, all possible HTTP methods, and necessary items in request headers
-app.use(cors());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedDomains.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 app.options("*", cors());
 
 // Initialize jwt authentication
